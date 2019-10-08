@@ -1,0 +1,38 @@
+{% extends "movie_recommendation_app/base.html" %}
+{% block content %}
+<h1>Please rate your favorite movies!</h1>
+<form class="form-horizontal" method="POST" action="">
+    <div class="row">
+        <div class="col-4 text-center">
+            <label>Movie</label>
+        </div>
+        <div class="col-1 text-center">
+            <label>Rating</label>
+        </div>
+    </div>
+    {% csrf_token %}
+    {{ formset.management_form }}
+    {% for form in formset %}
+    <div class="row form-row spacer p-3">
+        <div class="col-4">
+            <div class="input-group">
+                {{form.movie}}
+                <div class="input-group-append">
+                    <button class="btn btn-success add-form-row">+</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-1">
+            <div class="input-group">
+                {{ form.rating }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="row spacer">
+        <div class="col-4 offset-1">
+            <button type="submit" class="btn btn-block btn-primary">Submit</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
