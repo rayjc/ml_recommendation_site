@@ -23,9 +23,9 @@ def rate_movies( request ):
             for form in formset:
                 # extract user input
                 movie = form.cleaned_data.get( 'movie' )
-                star = form.cleaned_data.get( 'star' )
+                star = form.cleaned_data.get( 'rating' )
                 # create or update Rating table
-                if movie and rating:
+                if movie and star:
                     newStar, created = Rating.objects.get_or_create( 
                         userId=tempUserId, movie=Movie.objects.get( id=movie ),
                         rating=star )
@@ -36,7 +36,8 @@ def rate_movies( request ):
             # redirect to movie recommendation page
             #return redirect_lazy( 'recommendation' )
             request.session[ "newUserId" ] = tempUserId
-            return redirect( "recommendation" )
+            if int( request.POST.get( "form-TOTAL_FORMS" ) ) > 1:
+                return redirect( "recommendation" )
     return render( request, template_name, {
         'formset': formset,
         'heading': heading_message,
