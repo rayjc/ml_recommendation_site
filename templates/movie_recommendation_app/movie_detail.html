@@ -1,0 +1,8 @@
+{% extends "movie_recommendation_app/base.html" %}
+
+{% block content %}
+    <h1>Title: {{ movie.title }}</h1>
+    <p><strong>Genre:</strong> {{ movie.genres }}</p>
+    <p><strong>Average Rating:</strong> {{ movie_rating }}</p>
+
+{% endblock %}

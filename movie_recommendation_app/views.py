@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView
+from django.views.generic import DetailView, ListView
+from django.db.models import Avg
 
 from movie_recommendation_app.forms import RatingFormset
 from movie_recommendation_app.models import Rating, Movie
@@ -77,6 +78,18 @@ class RecommendationListView( ListView ):
             queryset = queryset.filter( userId=newUserId )\
                                 .order_by( "-rating" )[:10]
         return queryset
+
+class MovieDetailView( DetailView ):
+    model = Movie
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["movie_rating"] = round( 
+            Rating.objects.filter( movie__pk=kwargs.get("object").pk )
+                                                    .aggregate( Avg( "rating" ) )
+                                                    .get( "rating__avg" ), 2
+        )
+        return context
 
 class MovieListView( ListView ):
     model = Movie
