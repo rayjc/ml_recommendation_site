@@ -1,0 +1,15 @@
+{% extends "movie_recommendation_app/base.html" %}
+{% block content %}
+    <h1>Movie Recommendation List</h1>
+    {% if recommendation_list %}
+    <ul>
+        {% for rec in recommendation_list %}
+        <li>
+            <a href="{{ rec.get_absolute_url }}">{{ rec.movie }}</a> ({{rec.rating}})/({{rec.rating_predicted}})
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p>No recommedation available.</p>
+    {% endif %}
+{% endblock %}

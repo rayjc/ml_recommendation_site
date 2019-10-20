@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-# TODO: import listView
 from django.views.generic import ListView
 
 from movie_recommendation_app.forms import RatingFormset
@@ -35,7 +34,12 @@ def rate_movies( request ):
                             rating=star )
             # redirect to movie recommendation page
             #return redirect_lazy( 'recommendation' )
-            request.session[ "newUserId" ] = tempUserId
+            # add newUserid used to create entry to queue and pass to session
+            if not isinstance( request.session.get( "newUserIds" ), list ):
+                request.session[ "newUserIds" ] = [ tempUserId ]
+            else:
+                request.session[ "newUserIds" ] = request.session[ "newUserIds" ].append( tempUserId )
+            
             if int( request.POST.get( "form-TOTAL_FORMS" ) ) > 1:
                 return redirect( "recommendation" )
     return render( request, template_name, {
@@ -43,17 +47,36 @@ def rate_movies( request ):
         'heading': heading_message,
     } )
 
-def recommendationView( request ):
-    newUserId = request.session.get( "newUserId" )
-    if newUserId:
-        ## TODO
+# def loadingView( request ):
+#     template_name = 'movie_recommendation_app/loading.html'
+#     heading_message = 'Now Loading...'
+
+#     # TODO: invoke ml algo on newUserId
+
+# def recommendationView( request ):
+#     newUserId = request.session.get( "newUserId" )
+#     if newUserId:
+#         ## TODO
 
 
-        recDict = { "movies": [] }
-        return render( request, "movie_recommendation_app/recommendation.html",
-                        context=recDict )
-    else:
-        return HttpResponse( "Nothing to show yet..." )
+#         recDict = { "movies": [] }
+#         return render( request, "movie_recommendation_app/recommendation.html",
+#                         context=recDict )
+#     else:
+#         return HttpResponse( "Nothing to show yet..." )
+
+class RecommendationListView( ListView ):
+    model = Rating
+    template_name = "movie_recommendation_app/recommendation_list.html"
+    context_object_name = "recommendation_list"
+    
+    def get_queryset(self):
+        queryset = super(RecommendationListView, self).get_queryset()
+        if self.request.session.get( "newUserIds" ):
+            newUserId = self.request.session.get( "newUserIds" ).pop(0)
+            queryset = queryset.filter( userId=newUserId )\
+                                .order_by( "-rating" )[:10]
+        return queryset
 
 class MovieListView( ListView ):
     model = Movie

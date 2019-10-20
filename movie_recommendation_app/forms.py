@@ -28,7 +28,7 @@ class RatingForm(forms.Form):
     #         'placeholder': 'Enter Movie Name here'
     #     }))
     
-    movieChoices.insert( 0, ( "", "Select Movie") )
+    movieChoices.insert( 0, ( "", "-Select Movie-") )
     movie = forms.ChoiceField( label='Movie', choices=movieChoices, required=True )
     movie.widget.attrs.update( { 'class': 'form-control',
                                     'placeholder': 'Select Movie',
