@@ -35,14 +35,9 @@ def rate_movies( request ):
                             rating=star )
             # redirect to movie recommendation page
             #return redirect_lazy( 'recommendation' )
-            # add newUserid used to create entry to queue and pass to session
-            if not isinstance( request.session.get( "newUserIds" ), list ):
-                request.session[ "newUserIds" ] = [ tempUserId ]
-            else:
-                request.session[ "newUserIds" ] = request.session[ "newUserIds" ].append( tempUserId )
             
             if int( request.POST.get( "form-TOTAL_FORMS" ) ) > 1:
-                return redirect( "recommendation" )
+                return redirect( "recommendation", userId=tempUserId )
     return render( request, template_name, {
         'formset': formset,
         'heading': heading_message,
@@ -73,8 +68,8 @@ class RecommendationListView( ListView ):
     
     def get_queryset(self):
         queryset = super(RecommendationListView, self).get_queryset()
-        if self.request.session.get( "newUserIds" ):
-            newUserId = self.request.session.get( "newUserIds" ).pop(0)
+        if self.kwargs.get("userId"):
+            newUserId = self.kwargs.get("userId")
             queryset = queryset.filter( userId=newUserId )\
                                 .order_by( "-rating" )[:10]
         return queryset
