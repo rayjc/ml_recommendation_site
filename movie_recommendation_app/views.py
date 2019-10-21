@@ -4,6 +4,7 @@ from django.db.models import Avg
 
 from movie_recommendation_app.forms import RatingFormset
 from movie_recommendation_app.models import Rating, Movie
+from movie_recommendation_app.recommendation import Recommendation
 
 # Create your views here.
 
@@ -32,10 +33,14 @@ def rate_movies( request ):
                     if not created:
                         Rating.objects.update_or_create( 
                             userId=tempUserId, movie=Movie.objects.get( id=movie ),
-                            rating=star )
+                            defaults={ "rating": star } )
+
+            recommendation = Recommendation()
+            recommendation.predictUserRating()
+            recommendation.updatePredictedRating( tempUserId )
+
             # redirect to movie recommendation page
             #return redirect_lazy( 'recommendation' )
-            
             if int( request.POST.get( "form-TOTAL_FORMS" ) ) > 1:
                 return redirect( "recommendation", userId=tempUserId )
     return render( request, template_name, {
@@ -71,7 +76,7 @@ class RecommendationListView( ListView ):
         if self.kwargs.get("userId"):
             newUserId = self.kwargs.get("userId")
             queryset = queryset.filter( userId=newUserId )\
-                                .order_by( "-rating" )[:10]
+                                .order_by( "-rating_predicted" )[:10]
         return queryset
 
 class MovieDetailView( DetailView ):
