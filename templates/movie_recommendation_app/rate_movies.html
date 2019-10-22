@@ -44,4 +44,19 @@
     });
 </script>
 
+<script>
+    $(document).ready(function(){ 
+        $(".textSearch").autocomplete({
+            source: "/ajax/search/",
+            minLength: 2,
+            open: function(){
+                setTimeout(function () {
+                    $('.ui-autocomplete').css('z-index', 99);
+                }, 0);
+            }
+          });
+    });
+
+</script>
+
 {% endblock %}

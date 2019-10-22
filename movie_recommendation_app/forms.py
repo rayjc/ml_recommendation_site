@@ -5,8 +5,8 @@ from movie_recommendation_app.models import Movie
 
 class RatingForm(forms.Form):
     ## iterable of 2-tuples of ( primary key, title )
-    movieChoices = list( map( lambda q: ( q[ "id" ], q[ "title" ] ),
-                        Movie.objects.all().order_by( "title" ).values( "id", "title" ) ) )
+    #movieChoices = list( map( lambda q: ( q[ "id" ], q[ "title" ] ),
+    #                    Movie.objects.all().order_by( "title" ).values( "id", "title" ) ) )
     ratingChoices = [ ( val * 0.5, str( val * 0.5 ) ) for val in range( 0, 11 ) ]
 
     # movieName = forms.CharField( label='Movie Name', 
@@ -28,10 +28,12 @@ class RatingForm(forms.Form):
     #         'placeholder': 'Enter Movie Name here'
     #     }))
     
-    movieChoices.insert( 0, ( "", "-Select Movie-") )
-    movie = forms.ChoiceField( label='Movie', choices=movieChoices, required=True )
-    movie.widget.attrs.update( { 'class': 'form-control',
-                                    'placeholder': 'Select Movie',
+    #movieChoices.insert( 0, ( "", "-Select Movie-") )
+    movie = forms.CharField( label='Movie', required=True )
+    movie.widget.attrs.update( { 'class': 'form-control textSearch',
+                                    #'id': 'textSearch',
+                                    'name': 'movie',
+                                    'placeholder': 'Enter Movie',
                                     'required': 'required' } )
     ratingChoices.insert( 0, ( "","-" ) )
     rating = forms.ChoiceField( label='Rating', choices=ratingChoices )

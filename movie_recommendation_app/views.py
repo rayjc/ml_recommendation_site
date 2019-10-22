@@ -1,6 +1,9 @@
+import json
+
+from django.db.models import Avg
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, ListView
-from django.db.models import Avg
 
 from movie_recommendation_app.forms import RatingFormset
 from movie_recommendation_app.models import Rating, Movie
@@ -47,6 +50,20 @@ def rate_movies( request ):
         'formset': formset,
         'heading': heading_message,
     } )
+
+def movie_autocomplete( request ):
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        queryResult = Movie.objects.filter(title__startswith=q)
+        results = []
+        print( queryResult )
+        for movie in queryResult:
+            results.append(movie.title)
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
 
 # def loadingView( request ):
 #     template_name = 'movie_recommendation_app/loading.html'
