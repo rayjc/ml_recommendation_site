@@ -45,17 +45,25 @@
 </script>
 
 <script>
-    $(document).ready(function(){ 
-        $(".textSearch").autocomplete({
-            source: "/ajax/search/",
-            minLength: 2,
-            open: function(){
-                setTimeout(function () {
-                    $('.ui-autocomplete').css('z-index', 99);
-                }, 0);
+
+    var autocompleteOptions = {
+        minLength: 2,
+        source: function(request, response) {
+            $.ajax({
+            type: "GET",
+            url: "/ajax/search/",
+            data: { term: request.term },
+            success: function(data) {
+                response(data);
             }
-          });
+            });
+        }
+    }
+
+    $(document).ready(function(){ 
+        $(".textSearch").autocomplete(autocompleteOptions);
     });
+
 
 </script>
 
