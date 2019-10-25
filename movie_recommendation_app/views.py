@@ -31,11 +31,11 @@ def rate_movies( request ):
                 # create or update Rating table
                 if movie and star:
                     newStar, created = Rating.objects.get_or_create( 
-                        userId=tempUserId, movie=Movie.objects.get( id=movie ),
+                        userId=tempUserId, movie=Movie.objects.get( title=movie ),
                         rating=star )
                     if not created:
                         Rating.objects.update_or_create( 
-                            userId=tempUserId, movie=Movie.objects.get( id=movie ),
+                            userId=tempUserId, movie=Movie.objects.get( title=movie ),
                             defaults={ "rating": star } )
 
             recommendation = Recommendation()

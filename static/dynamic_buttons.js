@@ -1,7 +1,7 @@
 function cloneMore(selector, type) {
     var newElement = $(selector).clone(true);
     var total = $('#id_' + type + '-TOTAL_FORMS').val();
-    newElement.find(':input:text').each(function () {
+    newElement.find(':input:not(button)').each(function () {
         var name = $(this).attr('name').replace('-' + (total - 1) + '-', '-' + total + '-');
         var id = 'id_' + name;
         $(this).attr({ 'name': name, 'id': id }).val('').removeAttr('checked');
@@ -22,11 +22,23 @@ function cloneMore(selector, type) {
     //$('.form-row:not(:last)').find('.input-group-append').remove();
 
     // initialize autocomplete
-    if ( newElement.find( ".textSearch" ).autocomplete("instance") ){
-        newElement.find( ".textSearch" ).autocomplete("destroy");
-        newElement.find( ".textSearch").removeData("uiAutocomplete");
+    // if ( newElement.find( ".textSearch" ).autocomplete("instance") ){
+    //     newElement.find( ".textSearch" ).autocomplete("destroy");
+    //     newElement.find( ".textSearch").removeData("uiAutocomplete");
+    // }
+    //newElement.find( ".textSearch" ).autocomplete(autocompleteOptions);
+}
+
+function cloneAutocompleteRow( selector, type ) {
+    let lastRowSelector = selector + ":last";
+    if ( $(lastRowSelector).find( ".textSearch" ).autocomplete("instance") ){
+        $(lastRowSelector).find( ".textSearch" ).autocomplete("destroy");
+        $(lastRowSelector).find( ".textSearch").removeData("uiAutocomplete");
     }
-    newElement.find( ".textSearch" ).autocomplete(autocompleteOptions);
+    let prevLastRow = $(lastRowSelector);
+    cloneMore( lastRowSelector, type )
+    $(lastRowSelector).find(".textSearch").autocomplete(autocompleteOptions);
+    $(prevLastRow).find(".textSearch").autocomplete(autocompleteOptions);
 }
 
 var autocompleteOptions = {
