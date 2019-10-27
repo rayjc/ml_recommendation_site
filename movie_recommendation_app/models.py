@@ -7,7 +7,8 @@ class Movie( models.Model ):
     genres = models.CharField( max_length=128, default="" )
 
     def __str__( self ):
-        return "[{}] {} {}".format( self.id, self.title, self.genres )
+        #return "[{}] {} {}".format( self.id, self.title, self.genres )
+        return "{}".format( self.title )
 
 class Rating( models.Model ):
     class Meta:

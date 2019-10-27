@@ -96,7 +96,7 @@ class RecommendationListView( ListView ):
         if self.kwargs.get("userId"):
             newUserId = self.kwargs.get("userId")
             queryset = queryset.filter( userId=newUserId )\
-                                .order_by( "-rating_predicted" )[:15]
+                                .order_by( "-rating_predicted" )[:20]
         return queryset
 
 class MovieDetailView( DetailView ):
