@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, ListView
 
-from movie_recommendation_app.forms import RatingFormset
+from movie_recommendation_app.forms import RatingFormSet
 from movie_recommendation_app.models import Rating, Movie
 from movie_recommendation_app.recommendation import Recommendation
 
@@ -14,10 +14,11 @@ from movie_recommendation_app.recommendation import Recommendation
 def rate_movies( request ):
     template_name = 'movie_recommendation_app/rate_movies.html'
     heading_message = 'Movie Recommendation'
-    if request.method == 'GET':
-        formset = RatingFormset( request.GET or None )
-    elif request.method == 'POST':
-        formset = RatingFormset( request.POST )
+    # if request.method == 'GET':
+    #     formset = RatingFormSet( request.GET or None )
+    # elif request.method == 'POST':
+    if request.method == 'POST':
+        formset = RatingFormSet( request.POST )
         if formset.is_valid():
             ## For simplicity this creates a new userId without collision
             ## this is needed since there's no User model
@@ -46,6 +47,8 @@ def rate_movies( request ):
             #return redirect_lazy( 'recommendation' )
             if int( request.POST.get( "form-TOTAL_FORMS" ) ) > 1:
                 return redirect( "recommendation", userId=tempUserId )
+    else:
+        formset = RatingFormSet( None )
     return render( request, template_name, {
         'formset': formset,
         'heading': heading_message,
@@ -93,7 +96,7 @@ class RecommendationListView( ListView ):
         if self.kwargs.get("userId"):
             newUserId = self.kwargs.get("userId")
             queryset = queryset.filter( userId=newUserId )\
-                                .order_by( "-rating_predicted" )[:10]
+                                .order_by( "-rating_predicted" )[:15]
         return queryset
 
 class MovieDetailView( DetailView ):
