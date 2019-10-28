@@ -8,7 +8,7 @@ This form consists of dynamically generated rows for movie ratings and autocompl
 ![1: Movie Ratings Submission](figures/autocomplete.png)
 1. Movie Recommendation List
 A list of movie recommendations will be generated based on the submitted form. This list is the result of executing PCA to predict user-ratings of other movies in the database. Users may click on each movie to be redirected the respected detail page. Note: any movie that an user has rated will not be in this list of recommendation.
-![2: Movie Recommendations ](figure/recommendation.png)
+![2: Movie Recommendations ](figures/recommendation.png)
 
 ### Included:
 * source code
