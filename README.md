@@ -19,3 +19,8 @@ A list of movie recommendations will be generated based on the submitted form. T
 * 3rd party python packages: numpy, scipy
 * Python 3 (tested with 3.7.3 on Windows)
 * Django (tested with 2.2.3 on Windows)
+
+### To run:
+```
+python manage.py runserver
+```
