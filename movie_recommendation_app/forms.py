@@ -55,6 +55,9 @@ class BaseRatingFromSet( forms.BaseFormSet ):
             if movie in movies:
                 raise forms.ValidationError( "Multiple ratings on the same movie detected!" )
             movies.add( movie )
+        
+        if len( movies ) < 2:
+            raise forms.ValidationError( "Please rate at least two movies for the best result!" )
 
 
 RatingFormSet = forms.formset_factory( RatingForm, formset=BaseRatingFromSet,

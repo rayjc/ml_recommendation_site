@@ -1,6 +1,7 @@
 import json
 
-from django.db.models import Avg
+from django.contrib.auth import get_user_model
+from django.db.models import Avg, Max
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, ListView
@@ -9,6 +10,7 @@ from movie_recommendation_app.forms import RatingFormSet
 from movie_recommendation_app.models import Rating, Movie
 from movie_recommendation_app.recommendation import Recommendation
 
+USER = get_user_model()
 # Create your views here.
 
 def rate_movies( request ):
@@ -20,11 +22,11 @@ def rate_movies( request ):
     if request.method == 'POST':
         formset = RatingFormSet( request.POST )
         if formset.is_valid():
-            ## For simplicity this creates a new userId without collision
-            ## this is needed since there's no User model
-            tempUserId = max( set( map( lambda q: q[ "userId" ], 
-                                Rating.objects.all()
-                                .values( "userId" ).distinct() ) ) ) + 1
+            ## Create a new user
+            tempUserId = USER.objects.all().aggregate( Max( 'id' ) )[ "id__max" ] + 1
+            userObj = USER.objects.create_user( username=str(tempUserId),
+                                                email=(str(tempUserId)+"@sample.com"),
+                                                is_active=False )
             for form in formset:
                 # extract user input
                 movie = form.cleaned_data.get( 'movie' )
@@ -32,21 +34,20 @@ def rate_movies( request ):
                 # create or update Rating table
                 if movie and star:
                     newStar, created = Rating.objects.get_or_create( 
-                        userId=tempUserId, movie=Movie.objects.get( title=movie ),
+                        user=userObj, movie=Movie.objects.get( title=movie ),
                         rating=star )
                     if not created:
                         Rating.objects.update_or_create( 
-                            userId=tempUserId, movie=Movie.objects.get( title=movie ),
+                            user=userObj, movie=Movie.objects.get( title=movie ),
                             defaults={ "rating": star } )
 
             recommendation = Recommendation()
             recommendation.predictUserRating()
-            recommendation.updatePredictedRating( tempUserId )
+            recommendation.updatePredictedRating( userObj.id )
 
             # redirect to movie recommendation page
             #return redirect_lazy( 'recommendation' )
-            if int( request.POST.get( "form-TOTAL_FORMS" ) ) > 1:
-                return redirect( "recommendation", userId=tempUserId )
+            return redirect( "recommendation", user_Id=userObj.id )
     else:
         formset = RatingFormSet( None )
     return render( request, template_name, {
@@ -93,9 +94,9 @@ class RecommendationListView( ListView ):
     
     def get_queryset(self):
         queryset = super(RecommendationListView, self).get_queryset()
-        if self.kwargs.get("userId"):
-            newUserId = self.kwargs.get("userId")
-            queryset = queryset.filter( userId=newUserId )\
+        if self.kwargs.get("user_Id"):
+            newUserId = self.kwargs.get("user_Id")
+            queryset = queryset.filter( user_id=newUserId )\
                                 .order_by( "-rating_predicted" )[:20]
         return queryset
 
