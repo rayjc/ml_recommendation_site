@@ -17,7 +17,7 @@ class Recommendation:
             self.itemInd )= self.create_user_item_matrix(Rating)
         self.Xnew = None
 
-    def create_user_item_matrix( self, ratings, userKey="userId", itemKey="movie", ratingKey="rating" ):
+    def create_user_item_matrix( self, ratings, userKey="user", itemKey="movie", ratingKey="rating" ):
 
         userMap = { 
             userId: index for index, userId in enumerate( 
@@ -98,7 +98,7 @@ class Recommendation:
         sortedMovieIds = [ self.itemInvMap[ ind ] for ind in sortedMovieInds ]
         ## Find the movies that user likes and has submitted in the form
         moviesUserLiked = set( map( lambda q: q["movie"],
-                                    Rating.objects.filter( userId=userId, rating__gte=3.0 ).values( "movie" ) ) )
+                                    Rating.objects.filter( user_id=userId, rating__gte=3.0 ).values( "movie" ) ) )
         ## Construct a list of ( movie, rating_predicted ) to be update/written to db
         ratingPairs = [
             ( movieId, self.Xnew[ self.userMap[ userId ], movieInd ] )
@@ -109,7 +109,7 @@ class Recommendation:
         ## Update the first 100 top rating based on prediction
         numUpdates = 100 if len( ratingPairs ) > 100 else len( ratingPairs )
         Rating.objects.bulk_update( [
-            Rating.objects.update_or_create( userId=userId,
+            Rating.objects.update_or_create( user_id=userId,
                                                 movie=Movie.objects.get( id=movieId ),
                                                 defaults={ "rating_predicted": movieRating } )[0]
             for movieId, movieRating in ratingPairs[:numUpdates]

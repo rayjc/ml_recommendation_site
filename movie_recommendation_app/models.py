@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 # Create your models here.
@@ -12,14 +13,14 @@ class Movie( models.Model ):
 
 class Rating( models.Model ):
     class Meta:
-        unique_together = ( ( "userId", "movie" ), )
+        unique_together = ( ( "user", "movie" ), )
 
-    userId = models.PositiveIntegerField()
-    movie = models.ForeignKey( "Movie", on_delete=models.PROTECT )
+    user = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT )
+    movie = models.ForeignKey( Movie, on_delete=models.PROTECT )
     rating = models.FloatField( default=0.0 )
     rating_predicted = models.FloatField( default=0.0 )
     timestamp = models.FloatField( default=0.0 )
 
     def __str__( self ):
-        return "[{}] {} {} {} {}".format( self.userId, self.movie, self.rating,
+        return "[{}] {} {} {} {}".format( self.user, self.movie, self.rating,
                                             self.rating_predicted, self.timestamp )
