@@ -69,23 +69,6 @@ def movie_autocomplete( request ):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
-# def loadingView( request ):
-#     template_name = 'movie_recommendation_app/loading.html'
-#     heading_message = 'Now Loading...'
-
-#     # TODO: invoke ml algo on newUserId
-
-# def recommendationView( request ):
-#     newUserId = request.session.get( "newUserId" )
-#     if newUserId:
-#         ## TODO
-
-
-#         recDict = { "movies": [] }
-#         return render( request, "movie_recommendation_app/recommendation.html",
-#                         context=recDict )
-#     else:
-#         return HttpResponse( "Nothing to show yet..." )
 
 class RecommendationListView( ListView ):
     model = Rating
