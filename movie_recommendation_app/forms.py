@@ -1,7 +1,45 @@
 from django import forms
-#from django.forms import formset_factory
+from django.contrib.auth import get_user_model
 
 from movie_recommendation_app.models import Movie
+
+USER = get_user_model()
+
+class SignUpForm( forms.Form ):
+    userName = forms.CharField( label='Name', required=True, max_length=48, min_length=1 )
+    userName.widget.attrs.update( { 'placeholder': 'Please enter user name',
+                                    'required': 'required' } )
+    userEmail = forms.EmailField( label='Email', required=True, max_length=128 )
+    userEmail.widget.attrs.update( { 'placeholder': 'Please enter email',
+                                        'required': 'required',
+                                        'size': '34' } )
+    userPassword = forms.CharField( widget=forms.PasswordInput(), label='Password', required=True, max_length=36 )
+    userPassword.widget.attrs.update( { 'placeholder': 'Please enter password',
+                                        'required': 'required' } )
+
+    def clean( self ):
+        super( SignUpForm, self ).clean()
+
+        userName = self.cleaned_data.get( 'userName' )
+        userEmail = self.cleaned_data.get( 'userEmail' )
+
+        nameSet = set( map( lambda q: q[ "username" ],
+                       USER.objects.all().values( "username" ) ) )
+        emailSet = set( map( lambda q: q[ "email" ],
+                       USER.objects.all().values( "email" ) ) )
+
+        if userName in nameSet:
+            raise forms.ValidationError( 
+                "Sorry, this user name belongs to someone else already..."
+            )
+        if userEmail in emailSet:
+            raise forms.ValidationError( 
+                "This email address exists in our database already. "
+                "Please either register using a different email address or login!"
+            )
+
+        return self.cleaned_data
+
 
 class RatingForm(forms.Form):
     ## iterable of 2-tuples of ( primary key, title )
