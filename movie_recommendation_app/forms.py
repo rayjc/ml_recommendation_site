@@ -1,9 +1,18 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm
 
 from movie_recommendation_app.models import Movie
 
 USER = get_user_model()
+
+class ActiveAuthenticationForm(AuthenticationForm):
+    def confirm_login_allowed(self, user):
+        if not user.is_active:
+            raise forms.ValidationError(
+                _("This account is inactive."),
+                code='inactive',
+            )
 
 class SignUpForm( forms.Form ):
     userName = forms.CharField( label='Name', required=True, max_length=48, min_length=1 )

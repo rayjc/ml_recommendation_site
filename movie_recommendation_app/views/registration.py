@@ -1,10 +1,12 @@
 from django.contrib.auth import authenticate, decorators, get_user_model, login, logout
-#from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 
 from movie_recommendation_app.forms import ActiveAuthenticationForm, SignUpForm
+
+USER = get_user_model()
 
 class RegisterTemplateView( TemplateView ):
     template_name = "movie_recommendation_app/register.html"
@@ -59,5 +61,6 @@ def user_logout( request ):
     logout( request )
     return redirect( "rate_movies" )
 
-# class ActiveLoginView( LoginView ):
-#     authentication_form = ActiveAuthenticationForm
+class ActiveLoginView( LoginView ):
+    template_name = "movie_recommendation_app/login.html"
+    authentication_form = ActiveAuthenticationForm

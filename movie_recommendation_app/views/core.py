@@ -10,7 +10,6 @@ from movie_recommendation_app.forms import RatingFormSet, SignUpForm
 from movie_recommendation_app.models import Rating, Movie
 from movie_recommendation_app.recommendation import Recommendation
 
-USER = get_user_model()
 # Create your views here.
 
 def rate_movies( request ):
