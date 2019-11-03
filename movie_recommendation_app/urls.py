@@ -1,6 +1,8 @@
 from django.urls import path
 from movie_recommendation_app import views
 
+app_name = 'movie_recommendation_app'
+
 urlpatterns = [
     path( '', views.rate_movies, name="rate_movies" ),
     path( 'recommendation/<int:user_Id>', views.RecommendationListView.as_view(), name="recommendation" ),
