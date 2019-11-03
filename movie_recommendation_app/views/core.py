@@ -1,6 +1,6 @@
 import json
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, decorators, get_user_model, login, logout
 from django.db.models import Avg, Max
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -99,28 +99,3 @@ class MovieListView( ListView ):
     model = Movie
     template_name = "movie_recommendation_app/movie_list.html"
     ordering = [ "-title" ]
-
-
-class RegistrationTemplateView( TemplateView ):
-    template_name = "movie_recommendation_app/register.html"
-    context_object_name = "signup_form"
-
-    def post( self, request ):
-        signUpForm = SignUpForm( request.POST )
-
-        if signUpForm.is_valid():
-            name = signUpForm.cleaned_data.get( 'userName' )
-            password = signUpForm.cleaned_data.get( 'userPassword' )
-            email = signUpForm.cleaned_data.get( 'userEmail' )
-            userQueryObj = USER.objects.create_user( username=name,
-                                                        password=password,
-                                                        email=email,
-                                                        is_active=True )
-            return redirect( "signup-complete" )    #TODO: add template and view
-    
-    def get( self, request, *args, **kwargs ):
-        context = {
-            'signup_form': SignUpForm(),
-            'heading': "Registration",
-        }
-        return super( RegistrationTemplateView, self ).render_to_response( context )
