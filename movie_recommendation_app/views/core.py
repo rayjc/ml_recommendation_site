@@ -17,9 +17,6 @@ USER = get_user_model()
 def rate_movies( request ):
     template_name = 'movie_recommendation_app/rate_movies.html'
     heading_message = 'Movie Recommendation'
-    # if request.method == 'GET':
-    #     formset = RatingFormSet( request.GET or None )
-    # elif request.method == 'POST':
     if request.method == 'POST':
         formset = RatingFormSet( request.POST )
         if formset.is_valid():
@@ -32,6 +29,7 @@ def rate_movies( request ):
                 userObj = USER.objects.create_user( username=str(tempUserId),
                                                     email=(str(tempUserId)+"@sample.com"),
                                                     is_active=False )
+                request.session[ "user_Id" ] = tempUserId       ## should match the view
             for form in formset:
                 # extract user input
                 movie = form.cleaned_data.get( 'movie' )
@@ -80,10 +78,17 @@ class RecommendationListView( ListView ):
     
     def get_queryset(self):
         queryset = super(RecommendationListView, self).get_queryset()
-        if self.kwargs.get("user_Id"):
+        if self.request.user.id:
+            queryset = queryset.filter( user=self.request.user, rating__lte=0.0 )\
+                                .order_by( "-rating_predicted" )[:20]            
+        elif ( self.kwargs.get("user_Id")
+                and self.kwargs.get("user_Id") == self.request.session.get( "user_Id" ) ):
+            ## only display result to anonymous user if session is correct
             newUserId = self.kwargs.get("user_Id")
             queryset = queryset.filter( user_id=newUserId, rating__lte=0.0 )\
                                 .order_by( "-rating_predicted" )[:20]
+        else:
+            queryset = queryset.none()
         return queryset
 
 class MovieDetailView( DetailView ):

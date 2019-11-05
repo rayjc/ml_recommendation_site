@@ -58,7 +58,6 @@ class RatingForm(forms.Form):
 
     movie = forms.CharField( label='Movie', required=True )
     movie.widget.attrs.update( { 'class': 'form-control textSearch',
-                                    #'id': 'textSearch',
                                     'name': 'movie',
                                     'placeholder': 'Enter Movie',
                                     'required': 'required' } )
