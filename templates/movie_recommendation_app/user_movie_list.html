@@ -1,0 +1,15 @@
+{% extends "movie_recommendation_app/base.html" %}
+{% block content %}
+    <h1>Movies you have rated:</h1>
+    {% if user_ratings %}
+    <ul>
+        {% for rating in user_ratings %}
+        <li>
+            <p><a href="{% url 'movie_recommendation_app:movie-detail' rating.movie.pk %}">{{ rating.movie }}</a>: {{ rating.rating }} stars</p>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p>Nothing to show you yet.</p>
+    {% endif %}
+{% endblock %}

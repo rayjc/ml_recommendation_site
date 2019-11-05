@@ -1,0 +1,37 @@
+{% extends "movie_recommendation_app/base.html" %} 
+{% block content %}
+<div class="jumbotran">
+    <h1>Login</h1>
+     {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+    {% if next %}
+        {% if user.is_authenticated %}
+            <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
+        {% else %}
+            <p>Please login to see this page.</p>
+        {% endif %}
+    {% endif %}
+    
+    <form method="post" action="{% url 'movie_recommendation_app:login' %}">
+        {% csrf_token %}
+        <div class="row col-1 mt-4">
+            <label>{{ form.username.label_tag }}</label>
+        </div>
+        <div class="row col-1">
+            {{ form.username }}
+        </div>
+        <div class="row col-1 mt-4">
+            <label>{{ form.password.label_tag }}</label>
+        </div>
+        <div class="row col-1">
+            {{ form.password }}
+        </div>
+
+        <div class="row col-2 mt-4">
+            <input type="submit" class="btn btn-block btn-primary" value="login">
+        </div>
+        <input type="hidden" name="next" value="{{ next }}">
+    </form>
+</div>
+{% endblock %}

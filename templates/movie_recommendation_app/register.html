@@ -1,0 +1,29 @@
+{% extends "movie_recommendation_app/base.html" %}
+{% block content %}
+<div class="jumbotran">
+    <h1>Please register below!</h1>
+    <form class="form-horizontal" method="POST" action="">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>{{ signup_form.userName.label_tag }}</td>
+                <td>{{ signup_form.userName }}</td>
+            </tr>
+            <tr>
+                <td>{{ signup_form.userPassword.label_tag }}</td>
+                <td>{{ signup_form.userPassword }}</td>
+            </tr>
+            <tr>
+                <td>{{ signup_form.userEmail.label_tag }}</td>
+                <td>{{ signup_form.userEmail }}</td>
+            </tr>
+        </table>
+        <div class="row spacer">
+            <div class="col-4">
+                <button type="submit" class="btn btn-block btn-primary">Register</button>
+            </div>
+        </div>
+        <div class="text-danger">{{ signup_form.non_field_errors }}</div>
+    </form>
+</div>
+{% endblock %}

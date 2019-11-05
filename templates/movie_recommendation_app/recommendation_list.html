@@ -5,7 +5,7 @@
     <ul>
         {% for rec in recommendation_list %}
         <li>
-            <a href="{% url 'movie-detail' rec.movie.pk %}">{{ rec.movie }}</a>
+            <a href="{% url 'movie_recommendation_app:movie-detail' rec.movie.pk %}">{{ rec.movie }}</a>
         </li>
         {% endfor %}
     </ul>
