@@ -102,3 +102,16 @@ class MovieListView( ListView ):
     model = Movie
     template_name = "movie_recommendation_app/movie_list.html"
     ordering = [ "-title" ]
+
+class UserRatedMoviesListView( ListView ):
+    model = Rating
+    template_name = "movie_recommendation_app/user_movie_list.html"
+    context_object_name = "user_ratings"
+    
+    def get_queryset(self):
+        queryset = super(UserRatedMoviesListView, self).get_queryset()
+        if self.request.user.is_authenticated:
+            currentUserId = self.request.user.id
+            queryset = queryset.filter( user_id=currentUserId, rating__gt=0.0 )\
+                                .order_by( "movie__title" )
+        return queryset

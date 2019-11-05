@@ -25,7 +25,9 @@
         </ul>
         <ul class="nav navbar-nav ml-auto">
             {% if user.is_authenticated %}
-                <li class="navbar-text pr-3">Hi, {{ user.get_username }}</li>
+                <li class="navbar-text pr-3">
+                    Hi, <a href="{% url 'movie_recommendation_app:user-rated-movies' %}">{{ user.get_username }}</a>!
+                </li>
             {% elif not "/accounts/login/" in request.get_full_path %}
                 <form class="form-inline" action="{% url 'movie_recommendation_app:login' %}" method="POST" >
                     {% csrf_token %}
