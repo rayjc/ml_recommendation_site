@@ -23,7 +23,7 @@ class RegisterTemplateView( TemplateView ):
                                                         password=password,
                                                         email=email,
                                                         is_active=True )
-            return redirect( "signup-complete" )    #TODO: add template and view
+            return redirect( "movie_recommendation_app:signup-complete" )    #TODO: add template and view
     
     def get_context_data( self, **kwargs ):
         context = super( RegisterTemplateView, self ).get_context_data( **kwargs )
@@ -38,6 +38,9 @@ class RegisterTemplateView( TemplateView ):
     #     }
     #     return super( RegisterTemplateView, self ).render_to_response( context )
 
+class SignUpCompleteTemplateView( TemplateView ):
+    template_name = "movie_recommendation_app/signup_complete.html"
+
 class LoginTemplateView( TemplateView ):
     template_name = "movie_recommendation_app/login.html"
 
@@ -49,7 +52,7 @@ class LoginTemplateView( TemplateView ):
         if user:
             if user.is_active:
                 login( request, user )
-                return redirect( "rate_movies" )
+                return redirect( "movie_recommendation_app:rate_movies" )
             else:
                 return HttpResponse( "ACCOUNT IS CURRENTLY NOT ACTIVE" )
         else:

@@ -12,4 +12,5 @@ urlpatterns = [
     path( 'accounts/register/', registration.RegisterTemplateView.as_view(), name="register" ),
     path( 'accounts/login/', registration.ActiveLoginView.as_view(), name="login" ),
     path( 'accounts/logout/', logout_then_login, name="logout" ),
+    path( 'accounts/signup-complete/', registration.SignUpCompleteTemplateView.as_view(), name="signup-complete" ),
 ]

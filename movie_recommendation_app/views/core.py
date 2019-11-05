@@ -23,7 +23,6 @@ def rate_movies( request ):
     if request.method == 'POST':
         formset = RatingFormSet( request.POST )
         if formset.is_valid():
-            ## TODO: update existing user ratings if logged in
             if request.user.is_authenticated:
                 tempUserId = request.user.id
                 userObj = USER.objects.get( id=request.user.id )
@@ -51,8 +50,6 @@ def rate_movies( request ):
             recommendation.predictUserRating()
             recommendation.updatePredictedRating( userObj.id )
 
-            # redirect to movie recommendation page
-            #return redirect_lazy( 'recommendation' )
             return redirect( "movie_recommendation_app:recommendation", user_Id=userObj.id )
     else:
         formset = RatingFormSet( None )
