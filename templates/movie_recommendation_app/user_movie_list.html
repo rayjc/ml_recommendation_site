@@ -9,6 +9,9 @@
         </li>
         {% endfor %}
     </ul>
+    <div>
+        <p><a href="{% url 'movie_recommendation_app:recommendation' user.id %}">Recommendation for you</a></p>
+    </div>
     {% else %}
         <p>Nothing to show you yet.</p>
     {% endif %}
