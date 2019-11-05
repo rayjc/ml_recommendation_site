@@ -10,6 +10,8 @@ from movie_recommendation_app.forms import RatingFormSet, SignUpForm
 from movie_recommendation_app.models import Rating, Movie
 from movie_recommendation_app.recommendation import Recommendation
 
+USER = get_user_model()
+
 # Create your views here.
 
 def rate_movies( request ):
@@ -21,11 +23,16 @@ def rate_movies( request ):
     if request.method == 'POST':
         formset = RatingFormSet( request.POST )
         if formset.is_valid():
-            ## Create a new user
-            tempUserId = USER.objects.all().aggregate( Max( 'id' ) )[ "id__max" ] + 1
-            userObj = USER.objects.create_user( username=str(tempUserId),
-                                                email=(str(tempUserId)+"@sample.com"),
-                                                is_active=False )
+            ## TODO: update existing user ratings if logged in
+            if request.user.is_authenticated:
+                tempUserId = request.user.id
+                userObj = USER.objects.get( id=request.user.id )
+            else:
+                ## Create a new user
+                tempUserId = USER.objects.all().aggregate( Max( 'id' ) )[ "id__max" ] + 1
+                userObj = USER.objects.create_user( username=str(tempUserId),
+                                                    email=(str(tempUserId)+"@sample.com"),
+                                                    is_active=False )
             for form in formset:
                 # extract user input
                 movie = form.cleaned_data.get( 'movie' )
@@ -34,7 +41,7 @@ def rate_movies( request ):
                 if movie and star:
                     newStar, created = Rating.objects.get_or_create( 
                         user=userObj, movie=Movie.objects.get( title=movie ),
-                        rating=star )
+                        defaults={ "rating": star } )
                     if not created:
                         Rating.objects.update_or_create( 
                             user=userObj, movie=Movie.objects.get( title=movie ),
@@ -46,7 +53,7 @@ def rate_movies( request ):
 
             # redirect to movie recommendation page
             #return redirect_lazy( 'recommendation' )
-            return redirect( "recommendation", user_Id=userObj.id )
+            return redirect( "movie_recommendation_app:recommendation", user_Id=userObj.id )
     else:
         formset = RatingFormSet( None )
     return render( request, template_name, {
@@ -59,7 +66,7 @@ def movie_autocomplete( request ):
         data = request.GET.get('term', '')
         queryResult = Movie.objects.filter(title__startswith=data).order_by("title")
         results = []
-        print( queryResult )
+        # print( queryResult )
         for movie in queryResult:
             results.append(movie.title)
         data = json.dumps(results)
@@ -78,7 +85,7 @@ class RecommendationListView( ListView ):
         queryset = super(RecommendationListView, self).get_queryset()
         if self.kwargs.get("user_Id"):
             newUserId = self.kwargs.get("user_Id")
-            queryset = queryset.filter( user_id=newUserId )\
+            queryset = queryset.filter( user_id=newUserId, rating__lte=0.0 )\
                                 .order_by( "-rating_predicted" )[:20]
         return queryset
 

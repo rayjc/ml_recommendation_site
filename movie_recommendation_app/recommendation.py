@@ -84,7 +84,7 @@ class Recommendation:
     def predictUserRating( self ):
 
         d = len( self.itemMap )
-        print( "{} movies".format( d ) )
+        # print( "{} movies".format( d ) )
         
         ## predict movie rating for user through PCA
         model = PCA(k=d//70)

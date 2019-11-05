@@ -55,12 +55,6 @@ class LoginTemplateView( TemplateView ):
         else:
             print( "Username: {} and password {} failed to login".format( userName, userPassword ) )
 
-
-@decorators.login_required
-def user_logout( request ):
-    logout( request )
-    return redirect( "rate_movies" )
-
 class ActiveLoginView( LoginView ):
     template_name = "movie_recommendation_app/login.html"
     authentication_form = ActiveAuthenticationForm
