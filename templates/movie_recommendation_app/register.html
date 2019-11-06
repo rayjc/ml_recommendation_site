@@ -4,22 +4,26 @@
     <h1>Please register below!</h1>
     <form class="form-horizontal" method="POST" action="">
         {% csrf_token %}
-        <table>
-            <tr>
-                <td>{{ signup_form.userName.label_tag }}</td>
-                <td>{{ signup_form.userName }}</td>
-            </tr>
-            <tr>
-                <td>{{ signup_form.userPassword.label_tag }}</td>
-                <td>{{ signup_form.userPassword }}</td>
-            </tr>
-            <tr>
-                <td>{{ signup_form.userEmail.label_tag }}</td>
-                <td>{{ signup_form.userEmail }}</td>
-            </tr>
-        </table>
+        <div class="row col-1 mt-4">
+            <label>{{ signup_form.userName.label_tag }}</label>
+        </div>
+        <div class="row col-1">
+            {{ signup_form.userName }}
+        </div>
+        <div class="row col-1 mt-4">
+            <label>{{ signup_form.userPassword.label_tag }}</label>
+        </div>
+        <div class="row col-1">
+            {{ signup_form.userPassword }}
+        </div>
+        <div class="row col-1 mt-4">
+            <label>{{ signup_form.userEmail.label_tag }}</label>
+        </div>
+        <div class="row col-1">
+             {{ signup_form.userEmail }}
+        </div>
         <div class="row spacer">
-            <div class="col-4">
+            <div class="col-2 mt-4">
                 <button type="submit" class="btn btn-block btn-primary">Register</button>
             </div>
         </div>

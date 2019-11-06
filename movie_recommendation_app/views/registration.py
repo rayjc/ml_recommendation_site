@@ -12,7 +12,7 @@ class RegisterTemplateView( TemplateView ):
     template_name = "movie_recommendation_app/register.html"
     context_object_name = "signup_form"
 
-    def post( self, request ):
+    def post( self, request, *args, **kwargs ):
         signUpForm = SignUpForm( request.POST )
 
         if signUpForm.is_valid():
@@ -23,7 +23,9 @@ class RegisterTemplateView( TemplateView ):
                                                         password=password,
                                                         email=email,
                                                         is_active=True )
-            return redirect( "movie_recommendation_app:signup-complete" )    #TODO: add template and view
+            return redirect( "movie_recommendation_app:signup-complete" )
+
+        return self.render_to_response( { 'signup_form': signUpForm } )
     
     def get_context_data( self, **kwargs ):
         context = super( RegisterTemplateView, self ).get_context_data( **kwargs )

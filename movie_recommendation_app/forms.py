@@ -1,6 +1,8 @@
 from django import forms
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.password_validation import validate_password
 
 from movie_recommendation_app.models import Movie
 
@@ -30,22 +32,28 @@ class SignUpForm( forms.Form ):
         super( SignUpForm, self ).clean()
 
         userName = self.cleaned_data.get( 'userName' )
+        userPassword = self.cleaned_data.get( 'userPassword' )
         userEmail = self.cleaned_data.get( 'userEmail' )
 
-        nameSet = set( map( lambda q: q[ "username" ],
-                       USER.objects.all().values( "username" ) ) )
-        emailSet = set( map( lambda q: q[ "email" ],
-                       USER.objects.all().values( "email" ) ) )
+        try:
+            if USER.objects.get( username=userName ):
+                raise forms.ValidationError(
+                    "Sorry, this user name belongs to someone else already..."
+                )
+        except ObjectDoesNotExist:
+            pass
 
-        if userName in nameSet:
-            raise forms.ValidationError( 
-                "Sorry, this user name belongs to someone else already..."
-            )
-        if userEmail in emailSet:
-            raise forms.ValidationError( 
-                "This email address exists in our database already. "
-                "Please either register using a different email address or login!"
-            )
+        validate_password( userPassword )
+
+        try:
+            if USER.objects.get( email=userEmail ):
+                raise forms.ValidationError( 
+                    "This email address exists in our database already. "
+                    "Please either register using a different email address or "
+                    "log in to your account!"
+                )
+        except ObjectDoesNotExist:
+            pass
 
         return self.cleaned_data
 
