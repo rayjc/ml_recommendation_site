@@ -12,8 +12,7 @@ A list of movie recommendations will be generated based on the submitted form. T
 1. User Authentication:
 This web app keeps track of movie ratings submitted by authenticated users and continually updates recommendations.
 ![3: Login ](figures/login.png)
-<br />
-![4: Login ](figures/user_recommendation.png)
+![4: Personalized Recommendation ](figures/user_recommendation.png)
 
 ### Included:
 * source code
