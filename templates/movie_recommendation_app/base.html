@@ -19,8 +19,13 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <ul class='nav navbar-nav mr-auto'>
-            <li class="nav-item active">
-                <a class="nav-link" href="{% url 'movie_recommendation_app:rate_movies' %}">Recommender Home</a>
+            <a class="nav-brand" href="https://github.com/rayjc/ml_recommendation_site">
+                <img src="{% static 'GitHub-Mark-64px.png' %}" width="32" height="32" alt="GitHub:rayjc">
+            </a>
+            <li class="nav-item active pl-4">
+                <a class="nav-link" href="{% url 'movie_recommendation_app:rate_movies' %}">
+                    <strong>Recommender Home</strong>
+                </a>
             </li>
         </ul>
         <ul class="nav navbar-nav ml-auto">
