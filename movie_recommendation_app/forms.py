@@ -27,12 +27,16 @@ class SignUpForm( forms.Form ):
     userPassword = forms.CharField( widget=forms.PasswordInput(), label='Password', required=True, max_length=36 )
     userPassword.widget.attrs.update( { 'placeholder': 'Please enter password',
                                         'required': 'required' } )
+    userPassword2 = forms.CharField( widget=forms.PasswordInput(), label='Confirm Password', required=True, max_length=36 )
+    userPassword2.widget.attrs.update( { 'placeholder': 'Please verify password',
+                                        'required': 'required' } )
 
     def clean( self ):
         super( SignUpForm, self ).clean()
 
         userName = self.cleaned_data.get( 'userName' )
         userPassword = self.cleaned_data.get( 'userPassword' )
+        userPassword2 = self.cleaned_data.get( 'userPassword2' )
         userEmail = self.cleaned_data.get( 'userEmail' )
 
         try:
@@ -44,6 +48,11 @@ class SignUpForm( forms.Form ):
             pass
 
         validate_password( userPassword )
+        if userPassword != userPassword2:
+            raise forms.ValidationError(
+                "Password does not match; please re-enter your password!"
+            )
+
 
         try:
             if USER.objects.get( email=userEmail ):
