@@ -59,7 +59,7 @@ def rate_movies( request ):
 def movie_autocomplete( request ):
     if request.is_ajax():
         data = request.GET.get('term', '')
-        queryResult = Movie.objects.filter(title__startswith=data).order_by("title")
+        queryResult = Movie.objects.filter(title__istartswith=data).order_by("title")
         results = []
         # print( queryResult )
         for movie in queryResult:
