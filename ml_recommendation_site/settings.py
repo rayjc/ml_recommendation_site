@@ -90,18 +90,18 @@ if 'RDS_HOSTNAME' in os.environ:
             'ATOMIC_REQUESTS': True,
         }
     }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'movie_recommendation_app_db',
-        'USER': 'rayjc',
-        'PASSWORD': os.environ['postgre_password'],   ## TODO: REMOVE THIS
-        'HOST': 'localhost',
-        'PORT': '5432',
-        'ATOMIC_REQUESTS': True,
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'movie_recommendation_app_db',
+            'USER': 'rayjc',
+            'PASSWORD': os.environ['postgre_password'],   ## TODO: REMOVE THIS
+            'HOST': 'localhost',
+            'PORT': '5432',
+            'ATOMIC_REQUESTS': True,
+        }
     }
-}
 
 
 # Password validation
