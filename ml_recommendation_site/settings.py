@@ -24,12 +24,12 @@ STATICFILES_DIRS = [
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!_sw!nnau1^76)6#co*-hdvmrw!p0ed5jlgm8@gs#(#eb#c)^-'
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = [ 'django-env.zmr79dqv8s.us-west-1.elasticbeanstalk.com' ]
+ALLOWED_HOSTS = [ 'movie-recommendation.us-west-1.elasticbeanstalk.com' ]
 
 
 # Application definition
@@ -82,7 +82,7 @@ if 'RDS_HOSTNAME' in os.environ:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ['INTERNAL_DB_NAME'],
+            'NAME': os.environ['INTERNAL_DB_NAME'],     ## db created from backup
             'USER': os.environ['RDS_USERNAME'],
             'PASSWORD': os.environ['RDS_PASSWORD'],
             'HOST': os.environ['RDS_HOSTNAME'],
@@ -96,7 +96,7 @@ else:
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'movie_recommendation_app_db',
             'USER': 'rayjc',
-            'PASSWORD': os.environ['postgre_password'],   ## TODO: REMOVE THIS
+            'PASSWORD': os.environ['postgre_password'],
             'HOST': 'localhost',
             'PORT': '5432',
             'ATOMIC_REQUESTS': True,
@@ -145,7 +145,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = 'static'
 
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = '/'
