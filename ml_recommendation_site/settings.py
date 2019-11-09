@@ -29,7 +29,7 @@ SECRET_KEY = '!_sw!nnau1^76)6#co*-hdvmrw!p0ed5jlgm8@gs#(#eb#c)^-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ 'Django-env.4typydevtm.us-west-2.elasticbeanstalk.com' ]
 
 
 # Application definition
@@ -78,12 +78,25 @@ WSGI_APPLICATION = 'ml_recommendation_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+if 'RDS_HOSTNAME' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+            'ATOMIC_REQUESTS': True,
+        }
+    }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'movie_recommendation_app_db',
         'USER': 'rayjc',
-        'PASSWORD': 'rayjfchung',   ## TODO: REMOVE THIS
+        'PASSWORD': os.environ['postgre_password'],   ## TODO: REMOVE THIS
         'HOST': 'localhost',
         'PORT': '5432',
         'ATOMIC_REQUESTS': True,
