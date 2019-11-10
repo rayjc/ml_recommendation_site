@@ -52,5 +52,11 @@ var autocompleteOptions = {
             response(data);
         }
         });
+    },
+    response: function (event, ui) {
+        if (!ui.content.length) {
+            var noResult = { value: "", label: "Sorry, no movies found..." };
+            ui.content.push(noResult);
+        }
     }
 }
