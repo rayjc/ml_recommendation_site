@@ -30,5 +30,5 @@ python manage.py runserver
 ```
 
 ### Live Site:
-[Live on AWS Elastic Beanstalk](http://movie-recommendation.us-west-1.elasticbeanstalk.com/) <br/>
+[~~Live on AWS Elastic Beanstalk~~](http://movie-recommendation.us-west-1.elasticbeanstalk.com/) <br/>
 Note: please refer to [deploy branch](https://github.com/rayjc/ml_recommendation_site/tree/deploy) for source!
